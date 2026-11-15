@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- O Mundo Hoje — edição visual 2.0
+<!-- O Mundo Hoje — edição visual 2.1
      Base, direção de arte e integração: deepseek.
      Funções dos colegas: Codex (folha mestra, grade e hierarquia da manchete),
      Nemotron (camada de movimento), 40B (comportamento e interação),
@@ -255,6 +255,58 @@ body.drawer-open{overflow:hidden}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .75s var(--ease),transform .75s var(--ease);transition-delay:calc(var(--i,0) * 55ms)}
 .reveal.is-in{opacity:1;transform:none}
 
+/* ferramentas de leitura */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-60px;z-index:90;padding:8px 12px;background:var(--ink);color:var(--paper);font:600 12px/1 var(--sans);text-decoration:none}
+.skip:focus{top:8px}
+.tools{display:flex;align-items:center;flex-wrap:wrap;gap:10px 22px;margin:-8px 0 24px;padding-bottom:12px;border-bottom:1px solid var(--rule-soft);font:600 10px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.search input{width:min(250px,100%);border:0;border-bottom:1px solid var(--ink);border-radius:0;background:transparent;padding:6px 0;font:400 14px/1.2 var(--serif);letter-spacing:0;text-transform:none;color:var(--ink)}
+.search input::placeholder{color:var(--muted);font-style:italic}
+.search input:focus-visible,.favs summary:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.tools button,.favs summary{border:0;border-bottom:1px solid transparent;background:none;padding:6px 0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--ink);cursor:pointer}
+.tools button:hover,.favs summary:hover{border-bottom-color:var(--ink)}
+.tools button[aria-pressed=true]{color:var(--red);border-bottom-color:var(--red)}
+.tools button[aria-disabled=true]{opacity:.4;cursor:default}
+.size{display:inline-flex;gap:14px}
+.favs{position:relative}
+.favs summary{list-style:none}
+.favs summary::-webkit-details-marker{display:none}
+.favs-panel{position:absolute;z-index:30;top:100%;left:0;min-width:210px;margin-top:6px;padding:12px 14px;background:var(--paper-3);border:1px solid var(--ink);display:grid;gap:9px;font:500 12px/1.2 var(--sans);letter-spacing:.04em;text-transform:none}
+.favs-panel label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.favs-panel input{accent-color:var(--red);width:15px;height:15px}
+.favs-panel .hint{margin:0;font-size:11px;line-height:1.4;color:var(--muted)}
+.notice{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:80;max-width:min(92vw,420px);padding:10px 16px;background:var(--ink);color:var(--paper);font:600 12px/1.4 var(--sans);transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.notice.on{opacity:1;transform:translate(-50%,0)}
+.thumb{margin:0 0 12px;aspect-ratio:16/9;overflow:hidden;background:var(--paper-2);border:1px solid var(--rule-soft)}
+.thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.lead-story .thumb{margin:0 0 18px}
+.why{font-style:italic;letter-spacing:.03em;text-transform:none;font-size:11px;color:var(--ink-soft)}
+.share-btn{border:0;border-bottom:1px solid var(--muted);background:none;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--ink-soft);cursor:pointer}
+.share-btn:hover{color:var(--red);border-bottom-color:var(--red)}
+.tl-sum{margin:0 0 8px;font:italic 13px/1.4 var(--serif);color:var(--muted)}
+.timeline{list-style:none;margin:0;padding:0;font:12px/1.4 var(--sans)}
+.timeline li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 10px;padding:7px 0;border-bottom:1px dotted var(--rule)}
+.timeline time{font-variant-numeric:tabular-nums;color:var(--muted)}
+.timeline a{text-decoration:none}
+.timeline a:hover{color:var(--red);text-decoration:underline}
+.timeline .tl-mark{display:block;color:var(--red);font-weight:700;letter-spacing:.06em;border-bottom:1px solid var(--red)}
+.about{max-width:68ch;margin:8px auto 30px}
+.about h2{font:900 clamp(30px,4.6vw,46px)/1.05 var(--display);letter-spacing:-.015em;margin:0 0 18px}
+.about h3{font:800 20px/1.2 var(--display);margin:26px 0 6px}
+.about p,.about li{color:var(--ink-soft)}
+.about ul,.about ol{padding-left:1.2em}
+.about a{color:var(--red)}
+body.reading{background-image:none}
+body.reading :is(.topline,.mast-folio,.subtitle,.rule-double,.dateline,.breaking,.side,.support,.status,footer,#miniMast,#progress){display:none!important}
+body.reading .wrap{max-width:760px}
+body.reading main{grid-template-columns:minmax(0,1fr)}
+body.reading .main-col{padding-right:0}
+body.reading .story-grid{grid-template-columns:1fr}
+body.reading .story,body.reading .story:nth-child(2n){padding:0 0 18px;border-left:0}
+body.reading .mast{padding-top:10px}
+body.reading .mast h1{font-size:clamp(34px,6vw,52px);margin:10px 0 14px;animation:none}
+@media(max-width:620px){.search{flex:1 1 100%}.search input{width:100%}}
+
 /* responsivo */
 @media(max-width:900px){
   main{grid-template-columns:1fr}
@@ -308,19 +360,31 @@ body.drawer-open{overflow:hidden}
   .mini-title{font-size:21px;white-space:nowrap}
   .mini-meta>span{display:none}
 }
+/* tamanho do texto */
+body{font-size:calc(17px*var(--tz,1))}
+.story h3{font-size:calc(21px*var(--tz,1))}
+.story p{font-size:calc(15px*var(--tz,1))}
+.lead-story h2{font-size:calc(clamp(31px,4.6vw,54px)*var(--tz,1))}
+.lead-story .summary{font-size:calc(17px*var(--tz,1))}
+.side-story h3{font-size:calc(17.5px*var(--tz,1))}
+.breaking p{font-size:calc(14.5px*var(--tz,1))}
+.meta{font-size:calc(9.5px*var(--tz,1))}
+.timeline a{font-size:calc(13px*var(--tz,1))}
+@media(max-width:620px){.lead-story h2{font-size:calc(clamp(28px,8.4vw,36px)*var(--tz,1))}.lead-story .summary{font-size:calc(16px*var(--tz,1))}.side-story h3{font-size:calc(17px*var(--tz,1))}.breaking p{font-size:calc(12.5px*var(--tz,1))}}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .reveal{opacity:1;transform:none}
 }
 @media print{
-  #progress,#miniMast,#drawer,#drawer-backdrop,.toolbar,.support-actions{display:none!important}
+  #progress,#miniMast,#drawer,#drawer-backdrop,.toolbar,.tools,.notice,.support-actions{display:none!important}
   body{background:#fff}
   .reveal{opacity:1;transform:none}
 }
 </style>
 </head>
 <body>
+<a class="skip" href="#mainHeading">Ir para as notícias</a>
 <div id="progress" aria-hidden="true"></div>
 <div id="miniMast">
   <span class="mini-title">O Mundo Hoje</span>
@@ -342,30 +406,67 @@ body.drawer-open{overflow:hidden}
 
   <div class="dateline"><span id="today">Edição do dia</span><span class="dateline-mid">Edição contínua</span><span id="updated">Primeira edição em preparação</span></div>
 
+  <div id="newsView">
   <div class="breaking"><strong id="breakingLabel">APURAÇÃO</strong><p id="breakingText">Apuração em andamento</p><span class="breaking-note" id="breakingNote">Apuração automática</span></div>
 
   <div class="toolbar">
-    <div class="filters" id="filters" aria-label="Filtrar notícias">
+    <div class="filters" id="filters" role="toolbar" aria-label="Filtrar notícias">
       <button data-filter="all" aria-pressed="true">Todas</button><button data-filter="politics">Política</button><button data-filter="brazil">Brasil</button><button data-filter="technology">Tecnologia</button><button data-filter="economy">Economia</button><button data-filter="health">Saúde</button><button data-filter="climate">Clima</button><button data-filter="science">Ciência</button><button data-filter="sports">Esportes</button>
     </div>
     <button class="refresh" id="refreshBtn">Atualizar</button>
   </div>
 
+  <div class="tools" role="group" aria-label="Ferramentas de leitura">
+    <div class="search"><label class="sr" for="q">Buscar nas manchetes carregadas</label><input id="q" type="search" placeholder="Buscar nomes e assuntos" autocomplete="off" enterkeyhint="search"></div>
+    <details class="favs" id="favs"><summary>Meus temas<span id="favCount"></span></summary><div class="favs-panel" id="favsPanel" role="group" aria-label="Temas favoritos"></div></details>
+    <div class="size" role="group" aria-label="Tamanho do texto"><button type="button" id="tzDown" aria-label="Diminuir texto">A−</button><button type="button" id="tzUp" aria-label="Aumentar texto">A+</button></div>
+    <button type="button" id="readBtn" aria-pressed="false">Modo leitura</button>
+    <button type="button" id="shareEd">Compartilhar edição</button>
+  </div>
+
   <main>
     <section class="main-col">
-      <div class="col-head"><h2 class="section-title" id="mainHeading">Destaques do mundo</h2><span class="head-rule" role="presentation"></span><span class="head-note">Últimas 48 horas</span></div>
+      <div class="col-head"><h2 class="section-title" id="mainHeading">Destaques do mundo</h2><span class="head-rule" role="presentation"></span><span class="head-note" id="headNote">Últimas 48 horas</span></div>
       <div id="lead" class="lead"><div class="skeleton"></div></div>
       <div id="newsGrid" class="story-grid"><div class="skeleton"></div><div class="skeleton"></div></div>
     </section>
     <aside class="side">
       <section class="side-section"><h2 class="section-title">Tecnologia &amp; inovação</h2><div id="techNews"><div class="skeleton"></div></div></section>
       <section class="side-section"><h2 class="section-title">Brasil &amp; economia</h2><div id="economyNews"><div class="skeleton"></div></div></section>
+      <section class="side-section"><h2 class="section-title">Linha do tempo</h2><p class="tl-sum" id="tlSummary"></p><ol class="timeline" id="timeline"></ol></section>
       <section class="market-card"><h2 class="section-title">Mercados</h2><p class="market-intro"><span class="market-live"><i class="live-dot" aria-hidden="true"></i>Cripto em tempo real</span></p><div id="cryptoRows"></div><div class="market-foot" id="cryptoStatus">Preços em USDT, aproximação do dólar. Atualização contínua pela Binance; a conversão em reais usa a taxa de referência do dia.</div></section>
       <section class="market-card"><h2 class="section-title">Câmbio</h2><p class="market-intro"><span class="market-daily"><span class="daily-mark" aria-hidden="true"></span>Referência diária</span></p><div id="fxRows"><div class="empty">Buscando taxa de referência…</div></div><div class="market-foot" id="fxStatus">Referência diária do Frankfurter; não é cotação de negociação.</div></section>
     </aside>
   </main>
 
   <div class="status"><span id="newsStatus" role="status" aria-live="polite">Primeira apuração em curso.</span><span id="nextRefresh">Atualização automática a cada 3 minutos.</span></div>
+
+</div>
+
+  <section id="about" hidden>
+    <div class="about">
+      <h2 id="aboutTitle" tabindex="-1">Sobre O Mundo Hoje</h2>
+      <p id="aboutWho"></p>
+      <p>O jornal é gratuito e vive de apoio voluntário dos leitores. Ele não escreve nem republica reportagens: cada manchete leva à matéria original, no site de quem a produziu.</p>
+      <h3>Critério editorial</h3>
+      <ul>
+        <li>Entram só matérias em português, publicadas nas últimas 48 horas.</li>
+        <li>A ordem é a da recência, da mais nova para a mais antiga. A manchete é a matéria mais recente de Política ou, se você escolheu temas favoritos, a mais recente do seu primeiro tema.</li>
+        <li>A seleção é automática e sem revisão humana, então a posição de uma matéria não pode ser comprada.</li>
+      </ul>
+      <h3>Como as notícias são selecionadas</h3>
+      <ol>
+        <li>A cada 3 minutos o jornal consulta os feeds do Google Notícias em português, um por assunto: Política, Brasil, Tecnologia, Economia, Saúde, Clima, Ciência e Esportes. Política, Tecnologia e Clima também usam buscas por termos-chave.</li>
+        <li>Matérias repetidas e as que passam de 48 horas saem da edição.</li>
+        <li>Cada matéria recebe o assunto do feed de onde veio. Essa classificação é automática e pode errar.</li>
+        <li>Rótulos curtos explicam a posição: “Mais recente”, “Mais recente em” um assunto, “Destaque na fonte” (a matéria está entre as duas primeiras do feed) e “Seu tema”.</li>
+      </ol>
+      <h3>Seus dados</h3>
+      <p>Temas favoritos, tamanho do texto, modo leitura e o horário da sua última visita ficam salvos só neste navegador. O jornal não tem conta e não envia essas preferências a ninguém.</p>
+      <p>Mercados: cripto em tempo real pela Binance e câmbio de referência diário pelo Frankfurter.</p>
+      <p><a href="#edicao">Voltar às notícias</a></p>
+    </div>
+  </section>
 
   <section class="support" id="support">
     <div class="support-copy">
@@ -383,7 +484,7 @@ body.drawer-open{overflow:hidden}
 
   <footer>
     <div class="foot-grid">
-      <div><h3>Expediente</h3><p><strong>O Mundo Hoje</strong> é um jornal digital independente. As manchetes vêm de fontes externas em português e cada uma leva à matéria original.</p></div>
+      <div><h3>Expediente</h3><p><strong>O Mundo Hoje</strong> é um jornal digital independente. As manchetes vêm de fontes externas em português e cada uma leva à matéria original. <a href="#sobre">Saiba como escolhemos as notícias.</a></p></div>
       <div><h3>Fontes</h3><p>Notícias: Google Notícias, por RSS.</p><p>Leitura dos feeds: rss2json, allorigins e corsproxy.</p><p>Mercado: Binance. Câmbio: Frankfurter.</p></div>
       <div><h3>Aviso</h3><p>A classificação por assunto é automática e pode falhar. A disponibilidade depende dos serviços externos.</p></div>
     </div>
@@ -391,6 +492,7 @@ body.drawer-open{overflow:hidden}
   </footer>
 </div>
 
+<div id="notice" class="notice" role="status" aria-live="polite"></div>
 <div id="drawer-backdrop" aria-hidden="true"></div>
 <aside id="drawer" aria-hidden="true" aria-label="Menu de navegação" role="dialog" aria-modal="true">
   <div class="drawer-head"><span>O Mundo Hoje</span><button id="closeDrawer" aria-label="Fechar menu">×</button></div>
@@ -403,14 +505,17 @@ body.drawer-open{overflow:hidden}
   <a class="drawer-link" href="#mainHeading" data-jump="climate">Clima</a>
   <a class="drawer-link" href="#mainHeading" data-jump="science">Ciência</a>
   <a class="drawer-link" href="#mainHeading" data-jump="sports">Esportes</a>
+  <a class="drawer-link" href="#sobre" data-about>Sobre o jornal</a>
   <a class="drawer-link" href="#support" data-close>Apoie o criador</a>
   <p class="drawer-note">As manchetes são coletadas automaticamente, apenas de fontes em português. O conteúdo completo permanece nos sites originais. A classificação por assunto é automática e pode não ser perfeita.</p>
+  <p class="drawer-note">Atalhos: M abre o menu · / busca · Esc fecha · ← → percorrem os assuntos.</p>
 </aside>
 
 <script>
 'use strict';
 /* ====== CONFIGURE AQUI: apoio ao criador (deixe '' o que não quiser mostrar) ====== */
 const SUPPORT={
+  publisherName:'', // nome de quem publica o jornal (aparece em Sobre; opcional)
   pixKey:'',        // chave Pix: e-mail, CPF/CNPJ, telefone ou chave aleatória
   donateUrl:'',     // link de apoio: Apoia.se, Catarse, Buy Me a Coffee etc.
   contactEmail:'',  // e-mail de contato e suporte
@@ -434,10 +539,22 @@ const categories={
 };
 const state={articles:[],cat:{},filter:'all',lastNewsSuccess:null,newsBusy:false,cryptoSocket:null,cryptoData:{},shown:{},fx:null,fxDate:null,breakingUrl:'',failedCategories:[]};
 const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* preferências e histórico: ficam só neste navegador */
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const prefs=Object.assign({favs:[],tz:1,reading:false},store.get('omh:prefs',{}));
+prefs.favs=(Array.isArray(prefs.favs)?prefs.favs:[]).filter(k=>categories[k]);
+const savePrefs=()=>store.set('omh:prefs',prefs);
+const prevVisit=store.get('omh:visit',0),entered=store.get('omh:entered',{});
+const markVisit=()=>store.set('omh:visit',Date.now());
+addEventListener('pagehide',markVisit);document.addEventListener('visibilitychange',()=>{if(document.hidden)markVisit();});
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+state.q='';
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeURL=value=>{try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:'#'}catch{return '#'}};
+const safeImg=v=>{try{const u=new URL(v);return u.protocol==='https:'?u.href:''}catch{return ''}};
+const imgIn=html=>(/<img[^>]+src=["']([^"']+)["']/i.exec(html||'')||[])[1]||'';
 const cleanTitle=t=>(new DOMParser().parseFromString(String(t||''),'text/html').documentElement.textContent||'').replace(/\s+/g,' ').trim();
 function summaryFrom(raw,title,source){
   const text=cleanTitle(raw);if(!text)return'';
@@ -492,13 +609,13 @@ async function fetchT(url,ms){const c=new AbortController(),t=setTimeout(()=>c.a
 async function viaJson(url){
   const r=await fetchT('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(url),6000);const d=await r.json();
   if(d.status!=='ok'||!Array.isArray(d.items)||!d.items.length)throw new Error('rss2json');
-  return d.items.map(i=>({title:i.title,link:i.link,date:i.pubDate,source:'',summary:i.description||''}));
+  return d.items.map(i=>({title:i.title,link:i.link,date:i.pubDate,source:'',summary:i.description||'',image:i.thumbnail||i.enclosure?.link||''}));
 }
 async function viaXML(proxy,url){
   const r=await fetchT(proxy+encodeURIComponent(url),8000);const x=new DOMParser().parseFromString(await r.text(),'text/xml');
   const nodes=[...x.querySelectorAll('item')];if(!nodes.length)throw new Error('xml');
   const g=(n,q)=>n.querySelector(q)?.textContent||'';
-  return nodes.map(n=>({title:g(n,'title'),link:g(n,'link'),date:g(n,'pubDate'),source:g(n,'source'),summary:g(n,'description')||n.getElementsByTagName('content:encoded')[0]?.textContent||''}));
+  return nodes.map(n=>({title:g(n,'title'),link:g(n,'link'),date:g(n,'pubDate'),source:g(n,'source'),summary:g(n,'description')||n.getElementsByTagName('content:encoded')[0]?.textContent||'',image:n.getElementsByTagName('media:content')[0]?.getAttribute('url')||n.getElementsByTagName('media:thumbnail')[0]?.getAttribute('url')||n.querySelector('enclosure')?.getAttribute('url')||''}));
 }
 function fetchFeed(url){
   const tries=[()=>viaJson(url),()=>viaXML('https://api.allorigins.win/raw?url=',url),()=>viaXML('https://corsproxy.io/?url=',url)];
@@ -521,12 +638,15 @@ function normalize(it,key){
   const url=safeURL(it.link),seen=parseFeedDate(it.date);
   if(!title||url==='#')return null;
   if(seen&&Date.now()-seen.getTime()>MAX_AGE_MS)return null;
-  return{title,url,domain:source,category:key,seen,summary:summaryFrom(it.summary,title,source)};
+  return{title,url,domain:source,category:key,seen,summary:summaryFrom(it.summary,title,source),pos:it.pos??99,image:safeImg(it.image||imgIn(it.summary))};
 }
 function rebuild(){
   const dup=new Set();
   const flat=Object.values(state.cat).flat().filter(a=>{const k=a.title.toLowerCase().slice(0,70);if(dup.has(k))return false;dup.add(k);return true;});
   state.articles=flat.sort((a,b)=>(b.seen?.getTime()||0)-(a.seen?.getTime()||0));
+  let dirty=false;
+  for(const a of state.articles){if(!entered[a.url]){entered[a.url]=Date.now();dirty=true;}a.entered=entered[a.url];}
+  if(dirty){const cut=Date.now()-3*864e5;for(const u in entered)if(entered[u]<cut)delete entered[u];store.set('omh:entered',entered);}
 }
 function stamp(){
   state.lastNewsSuccess=new Date();$('updated').textContent='Atualizado às '+state.lastNewsSuccess.toLocaleTimeString('pt-BR');
@@ -548,7 +668,7 @@ async function loadNews(){
   const keys=Object.keys(categories);let done=0;const failedKeys=[];state.failedCategories=[];$('newsStatus').className='';
   await Promise.all(keys.map(async k=>{
     const res=await Promise.allSettled(categories[k].feeds.map(fetchFeed));
-    const items=res.filter(r=>r.status==='fulfilled').flatMap(r=>r.value).map(i=>normalize(i,k)).filter(Boolean);
+    const items=res.filter(r=>r.status==='fulfilled').flatMap(r=>r.value.map((v,pos)=>({...v,pos}))).map(i=>normalize(i,k)).filter(Boolean);
     if(items.length)state.cat[k]=items;else{failedKeys.push(k);state.failedCategories=failedKeys.slice();}
     done++;rebuild();
     if(items.length)scheduleRender();
@@ -578,23 +698,49 @@ async function loadNews(){
   state.newsBusy=false;$('refreshBtn').disabled=false;$('refreshBtn').textContent='Atualizar';
 }
 function sourceOf(a){return escapeHTML(a.domain||(()=>{try{return new URL(a.url).hostname.replace(/^www\./,'')}catch{return'Fonte externa'}})());}
-function storyHTML(a,lead=false){
+function storyHTML(a,lead=false,why=''){
   const url=safeURL(a.url);
   const seen=a.seen instanceof Date?a.seen:parseFeedDate(a.seen);
   const date=seen
-    ?`<time datetime="${seen.toISOString()}" title="${escapeHTML(seen.toLocaleString('pt-BR'))}">${timeAgo(seen)}</time>`
+    ?`<time datetime="${seen.toISOString()}" title="${escapeHTML('Publicada em '+seen.toLocaleString('pt-BR'))}">${timeAgo(seen)}</time>`
     :'<span title="A fonte não informou uma data válida">sem hora</span>';
-  const isNew=!!seen&&Date.now()-seen.getTime()<2*60*60*1000;
+  const fresh=!!prevVisit&&a.entered>prevVisit;
+  const isNew=!fresh&&!!seen&&Date.now()-seen.getTime()<2*60*60*1000;
+  const entry=a.entered?new Date(a.entered).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
   const cat=categories[a.category]?.label||'Notícias';const h=lead?'2':'3';
   const summary=lead&&a.summary?`<p class="summary">${escapeHTML(a.summary)}</p>`:'';
-  return `<article class="${lead?'lead-story':'story'}">${lead?`<div class="lead-kicker">${escapeHTML(cat)} · Manchete</div>`:''}<h${h}><a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></h${h}>${summary}<div class="meta"><span class="tag">${escapeHTML(cat)}</span><span class="source">${sourceOf(a)}</span>${date}${isNew?'<span class="age-new">Recente</span>':''}</div></article>`;
+  const img=a.image?`<figure class="thumb"><img src="${escapeHTML(a.image)}" alt="${escapeHTML('Imagem da matéria: '+a.title)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()"></figure>`:'';
+  return `<article class="${lead?'lead-story':'story'}">${lead?`<div class="lead-kicker">${escapeHTML(cat)} · Manchete</div>`:''}${img}<h${h}><a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></h${h}>${summary}<div class="meta"><span class="tag">${escapeHTML(cat)}</span><span class="source">${sourceOf(a)}</span>${date}${fresh?`<span class="age-new" title="Entrou na edição às ${entry}">Nova</span>`:''}${isNew?'<span class="age-new">Recente</span>':''}${why?`<span class="why">${escapeHTML(why)}</span>`:''}<button type="button" class="share-btn" data-share="${escapeHTML(url)}" aria-label="${escapeHTML('Copiar link da matéria: '+a.title)}">Copiar link</button></div></article>`;
 }
+function renderTimeline(){
+  const el=$('timeline');if(!el)return;
+  const list=state.articles.filter(a=>a.entered).sort((a,b)=>b.entered-a.entered).slice(0,8);
+  const fresh=prevVisit?state.articles.filter(a=>a.entered>prevVisit).length:0;
+  $('tlSummary').textContent=!list.length?'A linha do tempo aparece quando a edição carregar.':!prevVisit?'Aqui aparecem as matérias conforme entram na edição.':fresh?`${fresh} ${fresh===1?'matéria nova':'matérias novas'} desde a sua última visita.`:'Nada novo desde a sua última visita.';
+  const fmt=t=>{const d=new Date(t);return new Date().toDateString()===d.toDateString()?d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});};
+  let marked=!prevVisit||!fresh;
+  el.innerHTML=list.map(a=>{
+    let mark='';
+    if(!marked&&a.entered<=prevVisit){marked=true;mark=`<li class="tl-mark">Sua última visita · ${fmt(prevVisit)}</li>`;}
+    return mark+`<li><time datetime="${new Date(a.entered).toISOString()}">${fmt(a.entered)}</time><a href="${safeURL(a.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></li>`;
+  }).join('');
+}
+function syncFilters(){document.querySelectorAll('#filters button').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.filter===state.filter&&!state.q.trim()));b.tabIndex=b.dataset.filter===state.filter?0:-1;});}
 function sideHTML(list,emptyMsg){return list.length?list.map(a=>`<article class="side-story"><h3><a href="${safeURL(a.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></h3><div class="meta"><span>${sourceOf(a)}</span><span>·</span><span>${a.seen?timeAgo(a.seen):'sem hora'}</span></div></article>`).join(''):`<p class="empty">${emptyMsg}</p>`;}
 function renderNews(){
-  const all=state.articles;let filtered=state.filter==='all'?all:all.filter(a=>a.category===state.filter);if(state.filter==='all'&&all.length){const lead=all.find(a=>a.category==='politics')||all[0];filtered=[lead,...all.filter(a=>a!==lead)];}
-  if(!filtered.length){$('lead').innerHTML='<p class="empty">Nada publicado neste assunto nas últimas 48 horas.</p>';$('newsGrid').innerHTML='';}
-  else{$('lead').innerHTML=storyHTML(filtered[0],true);$('newsGrid').innerHTML=filtered.slice(1,17).map(a=>storyHTML(a)).join('')||'<p class="empty">Mais manchetes ao longo do dia.</p>';}
-  $('mainHeading').textContent=state.filter==='all'?'Destaques do mundo':categories[state.filter].label;
+  const all=state.articles,qs=state.q.trim(),q=norm(qs),favs=prefs.favs,byFilter=!q&&state.filter==='all';
+  let list;
+  if(q)list=all.filter(a=>norm([a.title,a.summary,a.domain,categories[a.category]?.label].join(' ')).includes(q));
+  else if(byFilter){
+    const fav=all.filter(a=>favs.includes(a.category)),lead=fav[0]||all.find(a=>a.category==='politics')||all[0];
+    list=lead?[lead,...fav.filter(a=>a!==lead),...all.filter(a=>a!==lead&&!favs.includes(a.category))]:[];
+  }else list=all.filter(a=>a.category===state.filter);
+  const firstOf={};for(const a of all)if(!firstOf[a.category])firstOf[a.category]=a;
+  const why=a=>byFilter&&favs.includes(a.category)?'Seu tema':a===all[0]?'Mais recente':a.pos<2?'Destaque na fonte':firstOf[a.category]===a?'Mais recente em '+(categories[a.category]?.label||'seu assunto'):'';
+  if(!list.length){$('lead').innerHTML=`<p class="empty">${q?`Nenhuma matéria carregada menciona “${escapeHTML(qs)}”. Tente outro nome ou assunto.`:'Nada publicado neste assunto nas últimas 48 horas.'}</p>`;$('newsGrid').innerHTML='';}
+  else{$('lead').innerHTML=storyHTML(list[0],true,why(list[0]));$('newsGrid').innerHTML=list.slice(1,q?25:17).map(a=>storyHTML(a,false,why(a))).join('')||'<p class="empty">Mais manchetes ao longo do dia.</p>';}
+  $('mainHeading').textContent=q?`Busca: “${qs}” · ${list.length} ${list.length===1?'resultado':'resultados'}`:state.filter==='all'?'Destaques do mundo':categories[state.filter].label;
+  $('headNote').textContent=q?'Nas matérias carregadas':favs.length&&byFilter?'Seus temas primeiro':'Últimas 48 horas';
   $('techNews').innerHTML=sideHTML(all.filter(a=>a.category==='technology').slice(0,5),'Sem manchetes de tecnologia nesta edição.');
   $('economyNews').innerHTML=sideHTML(all.filter(a=>a.category==='economy'||a.category==='brazil').slice(0,5),'Sem manchetes de Brasil e economia nesta edição.');
   const recent=all.find(a=>a.seen&&Date.now()-a.seen.getTime()<2*60*60*1000);
@@ -609,6 +755,7 @@ function renderNews(){
     const link=$('breakingText').querySelector('a');
     if(link&&!reduced)link.classList.add('breaking-in');
   }
+  renderTimeline();syncFilters();
 }
 function setFilter(filter){state.filter=filter;document.querySelectorAll('#filters button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===filter)));renderNews();}
 document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>setFilter(b.dataset.filter)));
@@ -673,7 +820,8 @@ function coinIcon(sym,size=22){
   }[sym]||['#555','<text x="16" y="21" text-anchor="middle" font-size="12" fill="#fff">?</text>'];
   return `<svg class="coin" width="${size}" height="${size}" viewBox="0 0 32 32" role="img" aria-label="${escapeHTML(sym)}"><circle cx="16" cy="16" r="16" fill="${C[0]}"/>${C[1]}</svg>`;
 }
-function toast(msg){const t=$('toast');t.textContent=msg;setTimeout(()=>{if(t.textContent===msg)t.textContent='';},3500);}
+let noticeTimer;
+function toast(msg){const n=$('notice');n.textContent=msg;n.classList.add('on');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>n.classList.remove('on'),3200);}
 async function copyText(text,okMsg){
   try{await navigator.clipboard.writeText(text);}
   catch{const t=document.createElement('textarea');t.value=text;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}t.remove();if(!ok){toast('Não foi possível copiar. Selecione o texto e copie manualmente.');return;}}
@@ -862,6 +1010,100 @@ connectCrypto();loadFX();setInterval(loadFX,6*60*60*1000);
       else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
     });
   }
+})();
+</script>
+
+<script>
+/* ====== Sobre, busca, temas, leitura limpa, tamanho do texto, compartilhar e teclado ====== */
+(function(){
+  'use strict';
+  const typing=t=>t&&(/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)||t.isContentEditable);
+  const q=$('q');
+
+  /* página Sobre, em #sobre */
+  let wasAbout=false;
+  function route(){
+    const about=location.hash==='#sobre';
+    $('newsView').hidden=about;$('about').hidden=!about;
+    document.title=about?'Sobre — O Mundo Hoje':'O Mundo Hoje — jornal digital independente';
+    if(about){scrollTo(0,0);$('aboutTitle').focus({preventScroll:true});}
+    else if(wasAbout)scrollTo(0,0);
+    wasAbout=about;
+  }
+  function leaveAbout(){if(location.hash==='#sobre'){history.replaceState(null,'',location.pathname+location.search);route();}}
+  const who=SUPPORT.publisherName;
+  $('aboutWho').textContent=who?`O Mundo Hoje é publicado por ${who}, de forma independente.`:'O Mundo Hoje é publicado por um criador independente, sem redação própria e sem vínculo com os veículos cujas matérias indica.';
+  addEventListener('hashchange',route);route();
+  document.querySelectorAll('[data-about]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();drawer(false);location.hash='#sobre';}));
+
+  /* busca por palavra-chave */
+  let qt;const apply=()=>{state.q=q.value;renderNews();};
+  q.addEventListener('input',()=>{clearTimeout(qt);qt=setTimeout(apply,150);});
+  q.addEventListener('keydown',e=>{if(e.key==='Escape'&&q.value){e.stopPropagation();q.value='';apply();}});
+  const baseFilter=window.setFilter;
+  window.setFilter=function(f){leaveAbout();if(state.q){state.q='';q.value='';}baseFilter(f);};
+
+  /* temas favoritos */
+  const panel=$('favsPanel'),favs=$('favs');
+  panel.innerHTML=Object.entries(categories).map(([k,c])=>`<label><input type="checkbox" value="${k}"${prefs.favs.includes(k)?' checked':''}>${c.label}</label>`).join('')+'<p class="hint">Os temas marcados aparecem primeiro em “Todas”.</p>';
+  const count=()=>{$('favCount').textContent=prefs.favs.length?` (${prefs.favs.length})`:'';};count();
+  panel.addEventListener('change',()=>{
+    prefs.favs=[...panel.querySelectorAll('input:checked')].map(i=>i.value);savePrefs();count();renderNews();
+    toast(prefs.favs.length?'Temas salvos: '+prefs.favs.map(k=>categories[k].label).join(', ')+'.':'Temas favoritos removidos.');
+  });
+  document.addEventListener('click',e=>{if(favs.open&&!favs.contains(e.target))favs.open=false;});
+  favs.addEventListener('keydown',e=>{if(e.key==='Escape'&&favs.open){e.stopPropagation();favs.open=false;favs.querySelector('summary').focus();}});
+
+  /* tamanho do texto */
+  const steps=[.9,1,1.15,1.3,1.5];
+  const cur=()=>steps.reduce((b,s,i)=>Math.abs(s-prefs.tz)<Math.abs(steps[b]-prefs.tz)?i:b,1);
+  function size(i,say){
+    i=Math.max(0,Math.min(steps.length-1,i));prefs.tz=steps[i];
+    document.documentElement.style.setProperty('--tz',prefs.tz);
+    $('tzDown').setAttribute('aria-disabled',String(i===0));$('tzUp').setAttribute('aria-disabled',String(i===steps.length-1));
+    if(say){savePrefs();toast('Tamanho do texto: '+Math.round(prefs.tz*100)+'%');}
+  }
+  size(cur(),false);
+  $('tzDown').addEventListener('click',()=>size(cur()-1,true));$('tzUp').addEventListener('click',()=>size(cur()+1,true));
+
+  /* leitura limpa */
+  function reading(on,say){
+    prefs.reading=on;document.body.classList.toggle('reading',on);$('readBtn').setAttribute('aria-pressed',String(on));
+    if(say){savePrefs();toast(on?'Modo leitura ativado.':'Modo leitura desativado.');}
+  }
+  reading(prefs.reading,false);
+  $('readBtn').addEventListener('click',()=>reading(!prefs.reading,true));
+
+  /* compartilhar */
+  document.addEventListener('click',e=>{const b=e.target.closest('button[data-share]');if(b)copyText(b.dataset.share,'Link da matéria copiado.');});
+  $('shareEd').addEventListener('click',async()=>{
+    const url=location.href.split('#')[0];
+    if(navigator.share){
+      try{await navigator.share({title:'O Mundo Hoje',text:'Edição de '+new Date().toLocaleDateString('pt-BR'),url});return;}
+      catch(err){if(err&&err.name==='AbortError')return;}
+    }
+    copyText(url,'Link da edição copiado.');
+  });
+
+  /* teclado: setas entre filtros, atalhos e setas no menu */
+  $('filters').addEventListener('keydown',e=>{
+    const step={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];
+    if(!step&&e.key!=='Home'&&e.key!=='End')return;
+    const bs=[...$('filters').querySelectorAll('button')],i=bs.indexOf(document.activeElement);if(i<0)return;
+    e.preventDefault();
+    const n=e.key==='Home'?0:e.key==='End'?bs.length-1:(i+step+bs.length)%bs.length;
+    bs.forEach((b,j)=>b.tabIndex=j===n?0:-1);bs[n].focus();
+  });
+  $('drawer').addEventListener('keydown',e=>{
+    if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;
+    const f=[...$('drawer').querySelectorAll('a[href],button')],i=f.indexOf(document.activeElement);if(i<0)return;
+    e.preventDefault();f[(i+(e.key==='ArrowDown'?1:-1)+f.length)%f.length].focus();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey||typing(e.target))return;
+    if(e.key==='/'){e.preventDefault();leaveAbout();q.focus();}
+    else if(e.key==='m'||e.key==='M'){e.preventDefault();$('menuBtn').click();}
+  });
 })();
 </script>
 </body>
