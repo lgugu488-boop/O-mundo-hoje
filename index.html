@@ -96,6 +96,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset
 .breaking a.breaking-in{animation:breakingIn .5s var(--ease) both}
 @keyframes breakingIn{from{opacity:0;transform:translateX(-7px)}to{opacity:1;transform:none}}
 .breaking-note{align-self:center;padding:0 14px;font:9px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.breaking strong.is-fallback{background:var(--ink-soft)}
+.breaking strong.is-fallback::before{animation:none;background:var(--paper);opacity:.75}
 
 /* filtros */
 .toolbar{display:flex;align-items:baseline;justify-content:space-between;gap:10px 18px;margin:0 0 24px;padding-bottom:2px;border-bottom:1px solid var(--rule-soft);flex-wrap:wrap}
@@ -164,7 +166,12 @@ main.is-swapping .main-col{opacity:.25;transform:translateY(4px)}
 
 /* mercados */
 .market-card{border-top:3px double var(--ink);padding-top:13px;margin:0 0 30px}
-.market-intro{font:italic 13px/1.4 var(--serif);color:var(--muted);margin:5px 0 8px}
+.market-intro{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;font:italic 13px/1.4 var(--serif);color:var(--muted);margin:5px 0 8px}
+.market-live,.market-daily{display:inline-flex;align-items:center;gap:7px;font:700 9px/1.2 var(--sans);letter-spacing:.15em;text-transform:uppercase;font-style:normal}
+.market-live{color:var(--red)}
+.market-live .live-dot{margin-right:0}
+.market-daily{color:var(--muted)}
+.daily-mark{width:5px;height:5px;border:1px solid currentColor;transform:rotate(45deg)}
 .market-row{position:relative;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dotted var(--rule);font:12px/1.35 var(--sans);transition:background-color .35s var(--ease)}
 .market-row::before{content:"";position:absolute;left:-9px;top:4px;bottom:4px;width:2px;background:var(--red);opacity:0;transition:opacity .3s var(--ease)}
 .market-row:hover{background:rgba(22,19,15,.025)}
@@ -322,7 +329,7 @@ body.drawer-open{overflow:hidden}
 
 <div class="wrap">
   <div class="topline">
-    <div class="top-left"><button class="menu-btn" id="menuBtn" aria-label="Abrir menu">Menu</button><span><i class="live-dot"></i><span id="connectionLabel">Conectando</span></span></div>
+    <div class="top-left"><button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false">Menu</button><span><i class="live-dot"></i><span id="connectionLabel">Conectando</span></span></div>
     <div class="top-right"><span id="localClock">--:--:--</span><span>Brasil · Mundo</span></div>
   </div>
 
@@ -333,9 +340,9 @@ body.drawer-open{overflow:hidden}
     <div class="rule-double" role="presentation"></div>
   </header>
 
-  <div class="dateline"><span id="today">Carregando data…</span><span class="dateline-mid">Edição contínua</span><span id="updated">Buscando a primeira edição…</span></div>
+  <div class="dateline"><span id="today">Edição do dia</span><span class="dateline-mid">Edição contínua</span><span id="updated">Primeira edição em preparação</span></div>
 
-  <div class="breaking"><strong>ÚLTIMA HORA</strong><p id="breakingText">Buscando acontecimentos recentes…</p><span class="breaking-note">Coleta automática</span></div>
+  <div class="breaking"><strong id="breakingLabel">APURAÇÃO</strong><p id="breakingText">Apuração em andamento</p><span class="breaking-note" id="breakingNote">Apuração automática</span></div>
 
   <div class="toolbar">
     <div class="filters" id="filters" aria-label="Filtrar notícias">
@@ -353,12 +360,12 @@ body.drawer-open{overflow:hidden}
     <aside class="side">
       <section class="side-section"><h2 class="section-title">Tecnologia &amp; inovação</h2><div id="techNews"><div class="skeleton"></div></div></section>
       <section class="side-section"><h2 class="section-title">Brasil &amp; economia</h2><div id="economyNews"><div class="skeleton"></div></div></section>
-      <section class="market-card"><h2 class="section-title">Mercados em tempo real</h2><p class="market-intro">Cotações públicas · atualização contínua</p><div id="cryptoRows"></div><div class="market-foot" id="cryptoStatus">Os preços de cripto usam pares USDT da Binance; USDT é tratado como aproximação do dólar.</div></section>
-      <section class="market-card"><h2 class="section-title">Câmbio</h2><div id="fxRows"><div class="empty">Buscando taxa de referência…</div></div><div class="market-foot" id="fxStatus">Taxa de referência diária. Não é cotação intradiária de negociação.</div></section>
+      <section class="market-card"><h2 class="section-title">Mercados</h2><p class="market-intro"><span class="market-live"><i class="live-dot" aria-hidden="true"></i>Cripto em tempo real</span></p><div id="cryptoRows"></div><div class="market-foot" id="cryptoStatus">Preços em USDT, aproximação do dólar. Atualização contínua pela Binance; a conversão em reais usa a taxa de referência do dia.</div></section>
+      <section class="market-card"><h2 class="section-title">Câmbio</h2><p class="market-intro"><span class="market-daily"><span class="daily-mark" aria-hidden="true"></span>Referência diária</span></p><div id="fxRows"><div class="empty">Buscando taxa de referência…</div></div><div class="market-foot" id="fxStatus">Referência diária do Frankfurter; não é cotação de negociação.</div></section>
     </aside>
   </main>
 
-  <div class="status"><span id="newsStatus">Notícias: aguardando atualização.</span><span id="nextRefresh">Atualização automática a cada 3 minutos.</span></div>
+  <div class="status"><span id="newsStatus" role="status" aria-live="polite">Primeira apuração em curso.</span><span id="nextRefresh">Atualização automática a cada 3 minutos.</span></div>
 
   <section class="support" id="support">
     <div class="support-copy">
@@ -377,15 +384,15 @@ body.drawer-open{overflow:hidden}
   <footer>
     <div class="foot-grid">
       <div><h3>Expediente</h3><p><strong>O Mundo Hoje</strong> é um jornal digital independente. As manchetes vêm de fontes externas em português e cada uma leva à matéria original.</p></div>
-      <div><h3>Fontes</h3><p>Notícias: Google Notícias, por RSS.</p><p>Mercado: Binance. Câmbio: Frankfurter.</p></div>
+      <div><h3>Fontes</h3><p>Notícias: Google Notícias, por RSS.</p><p>Leitura dos feeds: rss2json, allorigins e corsproxy.</p><p>Mercado: Binance. Câmbio: Frankfurter.</p></div>
       <div><h3>Aviso</h3><p>A classificação por assunto é automática e pode falhar. A disponibilidade depende dos serviços externos.</p></div>
     </div>
     <div class="foot-bottom"><span class="foot-brand">O Mundo Hoje</span><span>Jornal digital independente · Brasil e mundo</span><span>© 2026</span></div>
   </footer>
 </div>
 
-<div id="drawer-backdrop"></div>
-<aside id="drawer" aria-hidden="true" aria-label="Menu de navegação">
+<div id="drawer-backdrop" aria-hidden="true"></div>
+<aside id="drawer" aria-hidden="true" aria-label="Menu de navegação" role="dialog" aria-modal="true">
   <div class="drawer-head"><span>O Mundo Hoje</span><button id="closeDrawer" aria-label="Fechar menu">×</button></div>
   <a class="drawer-link" href="#mainHeading" data-jump="all">Todas as notícias</a>
   <a class="drawer-link" href="#mainHeading" data-jump="politics">Política</a>
@@ -425,16 +432,58 @@ const categories={
  science:{label:'Ciência',feeds:[gnTopic('SCIENCE')]},
  sports:{label:'Esportes',feeds:[gnTopic('SPORTS')]}
 };
-const state={articles:[],cat:{},filter:'all',lastNewsSuccess:null,newsBusy:false,cryptoSocket:null,cryptoData:{},shown:{},fx:null,fxDate:null,breakingUrl:''};
+const state={articles:[],cat:{},filter:'all',lastNewsSuccess:null,newsBusy:false,cryptoSocket:null,cryptoData:{},shown:{},fx:null,fxDate:null,breakingUrl:'',failedCategories:[]};
 const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeURL=value=>{try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:'#'}catch{return '#'}};
 const cleanTitle=t=>(new DOMParser().parseFromString(String(t||''),'text/html').documentElement.textContent||'').replace(/\s+/g,' ').trim();
+function summaryFrom(raw,title,source){
+  const text=cleanTitle(raw);if(!text)return'';
+  const strip=(value,needle)=>{
+    if(!needle)return value;
+    const escaped=needle.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    return value.replace(new RegExp(escaped,'gi'),' ');
+  };
+  let clean=strip(strip(text,cleanTitle(title)),cleanTitle(source)).replace(/\s+/g,' ').replace(/^[\s:–—|·-]+/,'').trim();
+  if(clean.length<40||clean.split(/\s+/).filter(Boolean).length<6)return'';
+  return clean.length>300?clean.slice(0,297).replace(/\s+\S*$/,'').trimEnd()+'…':clean;
+}
 function clock(){const now=new Date();$('localClock').textContent=now.toLocaleTimeString('pt-BR');$('today').textContent=now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
-function timeAgo(date){const mins=Math.max(0,Math.floor((Date.now()-date.getTime())/60000));if(mins<1)return'agora';if(mins<60)return`há ${mins} min`;const hours=Math.floor(mins/60);if(hours<24)return`há ${hours} h`;return`há ${Math.floor(hours/24)} d`;}
-function parseSeen(value){if(!value)return null;const s=String(value);const m=s.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?$/);return m?new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6])):new Date(value);}
+function timeAgo(value){
+  const date=value instanceof Date?value:(value?new Date(value):null);
+  const t=date?date.getTime():NaN;
+  if(!isFinite(t))return'sem hora';
+  const mins=Math.max(0,Math.floor((Date.now()-t)/60000));
+  if(mins<1)return'agora';
+  if(mins<60)return`há ${mins} min`;
+  const hours=Math.floor(mins/60);
+  if(hours<24)return`há ${hours} h`;
+  return`há ${Math.floor(hours/24)} d`;
+}
+/* Datas: aceita o formato original do feed. O rss2json devolve
+   "AAAA-MM-DD HH:mm:ss" sem fuso; os feeds do Google Notícias são GMT,
+   então esse formato é lido como UTC. Formatos com fuso são respeitados. */
+function parseFeedDate(value){
+  if(value instanceof Date)return isFinite(value.getTime())?value:null;
+  if(value===null||value===undefined)return null;
+  const s=String(value).trim();if(!s)return null;
+  let m=s.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z|[+-]\d{2}:?\d{2})?$/);
+  if(m){
+    const stamp=Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]);
+    const zone=m[7];
+    if(!zone||zone==='Z')return new Date(stamp);
+    const sign=zone[0]==='-'?-1:1,hh=+zone.slice(1,3),mm=+zone.slice(-2);
+    return new Date(stamp-sign*(hh*60+mm)*60000);
+  }
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
+  if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+(m[6]||0)));
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m)return new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));
+  const parsed=new Date(s);return isFinite(parsed.getTime())?parsed:null;
+}
+function parseSeen(value){return parseFeedDate(value);}
 function dedupe(items){const seen=new Set();return items.filter(a=>{const key=(a.title||'').toLowerCase();if(!a.title||!a.url||seen.has(key)||seen.has(a.url))return false;seen.add(key);seen.add(a.url);return true;});}
 
 /* ====== Notícias (Google Notícias em português, via RSS) ====== */
@@ -443,13 +492,13 @@ async function fetchT(url,ms){const c=new AbortController(),t=setTimeout(()=>c.a
 async function viaJson(url){
   const r=await fetchT('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(url),6000);const d=await r.json();
   if(d.status!=='ok'||!Array.isArray(d.items)||!d.items.length)throw new Error('rss2json');
-  return d.items.map(i=>({title:i.title,link:i.link,date:new Date(String(i.pubDate).replace(' ','T')+'Z'),source:''}));
+  return d.items.map(i=>({title:i.title,link:i.link,date:i.pubDate,source:'',summary:i.description||''}));
 }
 async function viaXML(proxy,url){
   const r=await fetchT(proxy+encodeURIComponent(url),8000);const x=new DOMParser().parseFromString(await r.text(),'text/xml');
   const nodes=[...x.querySelectorAll('item')];if(!nodes.length)throw new Error('xml');
   const g=(n,q)=>n.querySelector(q)?.textContent||'';
-  return nodes.map(n=>({title:g(n,'title'),link:g(n,'link'),date:new Date(g(n,'pubDate')),source:g(n,'source')}));
+  return nodes.map(n=>({title:g(n,'title'),link:g(n,'link'),date:g(n,'pubDate'),source:g(n,'source'),summary:g(n,'description')||n.getElementsByTagName('content:encoded')[0]?.textContent||''}));
 }
 function fetchFeed(url){
   const tries=[()=>viaJson(url),()=>viaXML('https://api.allorigins.win/raw?url=',url),()=>viaXML('https://corsproxy.io/?url=',url)];
@@ -469,10 +518,10 @@ function normalize(it,key){
   let title=cleanTitle(it.title),source=cleanTitle(it.source);
   const m=title.match(/^(.*\S)\s+-\s+([^-]+)$/);
   if(m&&(!source||m[2].trim()===source)){title=m[1];source=m[2].trim();}
-  const url=safeURL(it.link),seen=it.date&&!isNaN(it.date)?it.date:null;
+  const url=safeURL(it.link),seen=parseFeedDate(it.date);
   if(!title||url==='#')return null;
   if(seen&&Date.now()-seen.getTime()>MAX_AGE_MS)return null;
-  return{title,url,domain:source,category:key,seen};
+  return{title,url,domain:source,category:key,seen,summary:summaryFrom(it.summary,title,source)};
 }
 function rebuild(){
   const dup=new Set();
@@ -480,58 +529,83 @@ function rebuild(){
   state.articles=flat.sort((a,b)=>(b.seen?.getTime()||0)-(a.seen?.getTime()||0));
 }
 function stamp(){
-  state.lastNewsSuccess=new Date();$('updated').textContent='Atualizado às '+state.lastNewsSuccess.toLocaleTimeString('pt-BR');$('connectionLabel').textContent='Notícias conectadas';
-  }
+  state.lastNewsSuccess=new Date();$('updated').textContent='Atualizado às '+state.lastNewsSuccess.toLocaleTimeString('pt-BR');
+  const failed=state.failedCategories?.length||0;
+  $('connectionLabel').textContent=failed===0?'Notícias conectadas':'Edição parcial';
+}
 function saveCache(){try{localStorage.setItem(CACHE_KEY,JSON.stringify({t:Date.now(),cat:state.cat}));}catch(e){}}
 let rq=false;
 function scheduleRender(){if(rq)return;rq=true;requestAnimationFrame(()=>{rq=false;renderNews();stamp();});}
 function loadCache(){
   try{
     const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(!c||Date.now()-c.t>24*60*60*1000)return;
-    for(const k of Object.keys(c.cat))if(categories[k])state.cat[k]=c.cat[k].map(a=>({...a,seen:a.seen?new Date(a.seen):null}));
-    rebuild();if(state.articles.length){renderNews();$('updated').textContent='Cópia salva de '+new Date(c.t).toLocaleTimeString('pt-BR')+' · atualizando…';}
+    for(const k of Object.keys(c.cat))if(categories[k])state.cat[k]=c.cat[k].map(a=>({...a,seen:parseFeedDate(a.seen)}));
+    rebuild();if(state.articles.length){renderNews();$('updated').textContent='Edição salva de '+new Date(c.t).toLocaleTimeString('pt-BR')+' · atualizando…';}
   }catch(e){}
 }
 async function loadNews(){
-  if(state.newsBusy)return;state.newsBusy=true;$('refreshBtn').disabled=true;$('refreshBtn').textContent='Buscando…';
-  const keys=Object.keys(categories);let done=0,failed=0;$('newsStatus').className='';
+  if(state.newsBusy)return;state.newsBusy=true;$('refreshBtn').disabled=true;$('refreshBtn').textContent='Atualizando…';
+  const keys=Object.keys(categories);let done=0;const failedKeys=[];state.failedCategories=[];$('newsStatus').className='';
   await Promise.all(keys.map(async k=>{
     const res=await Promise.allSettled(categories[k].feeds.map(fetchFeed));
     const items=res.filter(r=>r.status==='fulfilled').flatMap(r=>r.value).map(i=>normalize(i,k)).filter(Boolean);
-    if(items.length)state.cat[k]=items;else failed++;
+    if(items.length)state.cat[k]=items;else{failedKeys.push(k);state.failedCategories=failedKeys.slice();}
     done++;rebuild();
     if(items.length)scheduleRender();
-    $('newsStatus').textContent=`Atualizando notícias… ${done}/${keys.length}`;
+    $('newsStatus').textContent=`Atualizando notícias… ${done} de ${keys.length}`;
   }));
-  saveCache();
+  const failed=failedKeys.length;
+  if(failed<keys.length)saveCache();
   if(state.articles.length){
-    $('newsStatus').textContent=failed===keys.length?'Sem resposta das fontes agora; mostrando a última cópia salva.':`${state.articles.length} manchetes recentes em português${failed?` · ${failed} categoria(s) sem resposta`:''}.`;
+    if(failed<keys.length){
+      state.lastNewsSuccess=new Date();
+      $('updated').textContent='Atualizado às '+state.lastNewsSuccess.toLocaleTimeString('pt-BR');
+    }
+    const count=`${state.articles.length} ${state.articles.length===1?'manchete':'manchetes'} nesta edição`;
+    const failedLabels=failedKeys.map(k=>categories[k]?.label||k);
+    const failText=failed?`Sem resposta: ${failedLabels.join(', ')}`:'';
+    if(failed===keys.length){
+      $('newsStatus').textContent='Sem resposta das fontes; exibindo a edição salva.';
+    }else{
+      $('newsStatus').textContent=[count,failText,'Atualizado às '+new Date().toLocaleTimeString('pt-BR')].filter(Boolean).join(' · ')+'.';
+    }
     $('newsStatus').className=failed?'warn':'ok';
+    $('connectionLabel').textContent=failed===0?'Notícias conectadas':(failed===keys.length?'Edição salva':'Edição parcial');
   }else{
-    $('newsStatus').textContent='Não foi possível atualizar as notícias. Tentaremos novamente automaticamente.';$('newsStatus').className='warn';$('connectionLabel').textContent='Conexão parcial';
-    $('lead').innerHTML='<p class="error">Não foi possível carregar as manchetes agora.</p><p class="empty">Se você está vendo esta página dentro do app do Claude ou como arquivo salvo, esse visualizador bloqueia a internet. Publique o arquivo (Netlify, GitHub Pages…) e abra pelo link no navegador para ver tudo ao vivo.</p>';
+    $('newsStatus').textContent='As fontes não responderam; a apuração recomeça em breve.';$('newsStatus').className='warn';$('connectionLabel').textContent='Sem conexão';
+    $('lead').innerHTML='<p class="error">Não foi possível abrir esta edição. Confira a conexão e use Atualizar.</p>';
   }
   state.newsBusy=false;$('refreshBtn').disabled=false;$('refreshBtn').textContent='Atualizar';
 }
 function sourceOf(a){return escapeHTML(a.domain||(()=>{try{return new URL(a.url).hostname.replace(/^www\./,'')}catch{return'Fonte externa'}})());}
 function storyHTML(a,lead=false){
-  const url=safeURL(a.url);const date=a.seen?timeAgo(a.seen):'recente';const isNew=a.seen&&Date.now()-a.seen.getTime()<2*60*60*1000;
+  const url=safeURL(a.url);
+  const seen=a.seen instanceof Date?a.seen:parseFeedDate(a.seen);
+  const date=seen
+    ?`<time datetime="${seen.toISOString()}" title="${escapeHTML(seen.toLocaleString('pt-BR'))}">${timeAgo(seen)}</time>`
+    :'<span title="A fonte não informou uma data válida">sem hora</span>';
+  const isNew=!!seen&&Date.now()-seen.getTime()<2*60*60*1000;
   const cat=categories[a.category]?.label||'Notícias';const h=lead?'2':'3';
-  return `<article class="${lead?'lead-story':'story'}">${lead?`<div class="lead-kicker">${escapeHTML(cat)} · Manchete</div>`:''}<h${h}><a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></h${h}>${lead?`<p class="summary">Abertura desta edição. O texto completo da reportagem está ${a.domain?'em '+sourceOf(a):'na fonte original'}.</p>`:''}<div class="meta"><span class="tag">${escapeHTML(cat)}</span><span class="source">${sourceOf(a)}</span><span>${date}</span>${isNew?'<span class="age-new">Recente</span>':''}</div></article>`;
+  const summary=lead&&a.summary?`<p class="summary">${escapeHTML(a.summary)}</p>`:'';
+  return `<article class="${lead?'lead-story':'story'}">${lead?`<div class="lead-kicker">${escapeHTML(cat)} · Manchete</div>`:''}<h${h}><a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></h${h}>${summary}<div class="meta"><span class="tag">${escapeHTML(cat)}</span><span class="source">${sourceOf(a)}</span>${date}${isNew?'<span class="age-new">Recente</span>':''}</div></article>`;
 }
-function sideHTML(list,emptyMsg){return list.length?list.map(a=>`<article class="side-story"><h3><a href="${safeURL(a.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></h3><div class="meta"><span>${sourceOf(a)}</span><span>·</span><span>${a.seen?timeAgo(a.seen):'recente'}</span></div></article>`).join(''):`<p class="empty">${emptyMsg}</p>`;}
+function sideHTML(list,emptyMsg){return list.length?list.map(a=>`<article class="side-story"><h3><a href="${safeURL(a.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(a.title)}</a></h3><div class="meta"><span>${sourceOf(a)}</span><span>·</span><span>${a.seen?timeAgo(a.seen):'sem hora'}</span></div></article>`).join(''):`<p class="empty">${emptyMsg}</p>`;}
 function renderNews(){
   const all=state.articles;let filtered=state.filter==='all'?all:all.filter(a=>a.category===state.filter);if(state.filter==='all'&&all.length){const lead=all.find(a=>a.category==='politics')||all[0];filtered=[lead,...all.filter(a=>a!==lead)];}
-  if(!filtered.length){$('lead').innerHTML='<p class="empty">Nenhuma manchete encontrada nesta categoria nas últimas 48 horas.</p>';$('newsGrid').innerHTML='';}
-  else{$('lead').innerHTML=storyHTML(filtered[0],true);$('newsGrid').innerHTML=filtered.slice(1,17).map(a=>storyHTML(a)).join('')||'<p class="empty">Mais notícias em breve.</p>';}
+  if(!filtered.length){$('lead').innerHTML='<p class="empty">Nada publicado neste assunto nas últimas 48 horas.</p>';$('newsGrid').innerHTML='';}
+  else{$('lead').innerHTML=storyHTML(filtered[0],true);$('newsGrid').innerHTML=filtered.slice(1,17).map(a=>storyHTML(a)).join('')||'<p class="empty">Mais manchetes ao longo do dia.</p>';}
   $('mainHeading').textContent=state.filter==='all'?'Destaques do mundo':categories[state.filter].label;
-  $('techNews').innerHTML=sideHTML(all.filter(a=>a.category==='technology').slice(0,5),'Sem manchetes de tecnologia disponíveis.');
-  $('economyNews').innerHTML=sideHTML(all.filter(a=>a.category==='economy'||a.category==='brazil').slice(0,5),'Sem manchetes de Brasil e economia disponíveis.');
-  const latest=all.find(a=>a.seen&&Date.now()-a.seen.getTime()<2*60*60*1000)||all[0];
+  $('techNews').innerHTML=sideHTML(all.filter(a=>a.category==='technology').slice(0,5),'Sem manchetes de tecnologia nesta edição.');
+  $('economyNews').innerHTML=sideHTML(all.filter(a=>a.category==='economy'||a.category==='brazil').slice(0,5),'Sem manchetes de Brasil e economia nesta edição.');
+  const recent=all.find(a=>a.seen&&Date.now()-a.seen.getTime()<2*60*60*1000);
+  const latest=recent||all[0];
+  const label=$('breakingLabel'),note=$('breakingNote');
+  if(label){label.textContent=latest?(recent?'ÚLTIMA HORA':'MAIS RECENTE'):'APURAÇÃO';label.classList.toggle('is-fallback',!!latest&&!recent);}
+  if(note)note.textContent=latest?(latest.seen?(recent?'Publicada '+timeAgo(latest.seen):'Sem notícia nas últimas 2 h'):'Data não informada pela fonte'):'Apuração automática';
   const nextUrl=latest?.url||'';
-  if(state.breakingUrl!==nextUrl){
+  if(state.breakingUrl!==nextUrl||!latest){
     state.breakingUrl=nextUrl;
-    $('breakingText').innerHTML=latest?`<a href="${safeURL(latest.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(latest.title)}</a>`:'Nenhuma notícia de última hora encontrada.';
+    $('breakingText').innerHTML=latest?`<a href="${safeURL(latest.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(latest.title)}</a>`:'Nenhuma manchete nesta edição.';
     const link=$('breakingText').querySelector('a');
     if(link&&!reduced)link.classList.add('breaking-in');
   }
@@ -566,9 +640,9 @@ function connectCrypto(){
   try{
     const streams=symbols.map(s=>s+'@ticker').join('/');
     const ws=new WebSocket(`wss://data-stream.binance.vision:443/stream?streams=${streams}`);state.cryptoSocket=ws;
-    ws.onopen=()=>{if($('cryptoStatus'))$('cryptoStatus').textContent='Conexão com a Binance aberta. Preços em USDT, variação móvel de 24h.';};
-    ws.onmessage=event=>{try{const d=JSON.parse(event.data).data;if(d&&d.s){state.cryptoData[d.s]=d;updateRow(d.s);$('cryptoStatus').textContent='Preços em USDT (aproximação de USD), variação móvel de 24h. Dados públicos da Binance; valores em reais usam taxa de referência diária.';}}catch(e){console.warn('Ticker inválido',e);}};
-    ws.onerror=()=>{$('cryptoStatus').textContent='Conexão ao mercado instável; tentando reconectar.';};
+    ws.onopen=()=>{if($('cryptoStatus'))$('cryptoStatus').textContent='Cripto em tempo real pela Binance. Preços em USDT, variação móvel de 24h.';};
+    ws.onmessage=event=>{try{const d=JSON.parse(event.data).data;if(d&&d.s){state.cryptoData[d.s]=d;updateRow(d.s);$('cryptoStatus').textContent='Cripto em tempo real pela Binance. Preços em USDT (aproximação de USD); a conversão em reais usa a referência diária do câmbio.';}}catch(e){console.warn('Ticker inválido',e);}};
+    ws.onerror=()=>{$('cryptoStatus').textContent='Mercado instável; reconectando.';};
     ws.onclose=()=>{setTimeout(connectCrypto,5000);};
   }catch(error){console.warn(error);setTimeout(connectCrypto,10000);}
 }
@@ -578,8 +652,8 @@ async function loadFX(){
     const d=await r.json();state.fx=Number(d.rate);state.fxDate=d.date;
     symbols.forEach(s=>updateRow(s.toUpperCase()));
     $('fxRows').innerHTML=`<div class="market-row"><div class="market-name"><b>Dólar americano</b><small>USD / BRL</small></div><div class="market-price"><b>${money(state.fx,'BRL')}</b></div></div>`;
-    $('fxStatus').textContent=`Referência de ${d.date||'data não informada'} · Frankfurter. Taxa indicativa, atualizada conforme publicação das fontes oficiais.`;
-  }catch(error){console.warn(error);$('fxRows').innerHTML='<div class="error">Não foi possível carregar a taxa de câmbio.</div>';}
+    $('fxStatus').textContent=`Referência de ${d.date||'data não informada'} · Frankfurter. Atualizada uma vez por dia útil; não é cotação de negociação.`;
+  }catch(error){console.warn(error);$('fxRows').innerHTML='<div class="error">Câmbio indisponível nesta edição.</div>';}
 }
 
 /* ====== Apoie o criador ====== */
@@ -619,11 +693,37 @@ function renderSupport(){
 }
 
 /* ====== Menu lateral ====== */
-function drawer(open){$('drawer').classList.toggle('open',open);$('drawer-backdrop').classList.toggle('open',open);$('drawer').setAttribute('aria-hidden',String(!open));}
+function drawer(open){
+  const panel=$('drawer'),backdrop=$('drawer-backdrop'),button=$('menuBtn');
+  panel.classList.toggle('open',open);backdrop.classList.toggle('open',open);
+  panel.setAttribute('aria-hidden',String(!open));
+  if(button){button.setAttribute('aria-expanded',String(open));button.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');}
+}
 $('menuBtn').addEventListener('click',()=>drawer(true));$('closeDrawer').addEventListener('click',()=>drawer(false));$('drawer-backdrop').addEventListener('click',()=>drawer(false));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')drawer(false);});
-document.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',()=>{setFilter(a.dataset.jump);drawer(false);}));
-document.querySelectorAll('[data-close]').forEach(a=>a.addEventListener('click',()=>drawer(false)));
+function focusAfterDrawer(selector){
+  const target=selector?document.querySelector(selector):null;
+  if(!target)return;
+  const focusTarget=target.querySelector('.section-title')||target;
+  focusTarget.setAttribute('tabindex','-1');
+  setTimeout(()=>{
+    focusTarget.focus({preventScroll:true});
+    target.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+  },190);
+}
+document.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',e=>{
+  e.preventDefault();
+  setFilter(a.dataset.jump);
+  drawer(false);
+  focusAfterDrawer('#mainHeading');
+}));
+document.querySelectorAll('[data-close]').forEach(a=>a.addEventListener('click',e=>{
+  const href=a.getAttribute('href')||'';
+  if(!href.startsWith('#')){drawer(false);return;}
+  e.preventDefault();
+  drawer(false);
+  focusAfterDrawer(href);
+}));
 
 clock();setInterval(clock,1000);initCrypto();renderSupport();
 loadCache();loadNews();setInterval(()=>loadNews(),NEWS_REFRESH_MS);document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.lastNewsSuccess&&Date.now()-state.lastNewsSuccess.getTime()>NEWS_REFRESH_MS)loadNews();});
@@ -742,7 +842,10 @@ connectCrypto();loadFX();setInterval(loadFX,6*60*60*1000);
       const open=drawerEl.classList.contains('open');
       document.body.classList.toggle('drawer-open',open);
       if(open){
-        if(!lastFocus)lastFocus=document.activeElement;
+        if(!lastFocus){
+          lastFocus=document.activeElement;
+          if(!lastFocus||lastFocus===document.body||typeof lastFocus.focus!=='function')lastFocus=document.getElementById('menuBtn');
+        }
         const first=drawerEl.querySelector('a,button');
         if(first)setTimeout(()=>first.focus(),120);
       }else if(lastFocus&&document.contains(lastFocus)){
@@ -763,8 +866,3 @@ connectCrypto();loadFX();setInterval(loadFX,6*60*60*1000);
 </script>
 </body>
 </html>
-
-
-</body>
-</html>
-
